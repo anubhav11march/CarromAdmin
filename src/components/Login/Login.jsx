@@ -27,12 +27,17 @@ const Login = () => {
 
   return (
     <>
-      <nav className="navbar" style={{ background: "rgb(255, 153, 51)"}}>
+      <nav className="navbar" style={{ background: "rgb(255, 153, 51)" }}>
         <div className="container-fluid">
-          <p className="navbar-brand my-0" style={{color:"white"}}>Admin Login Page</p>
+          <p className="navbar-brand my-0" style={{ color: "white" }}>
+            Admin Login Page
+          </p>
         </div>
       </nav>
-      <div className="d-flex justify-content-center align-items-center" style={{height:"80vh"}}>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "80vh" }}
+      >
         <div
           className="border border-dark my-3 pt-5 pb-3 px-3 justify-content=start"
           style={{ borderRadius: "10px" }}
@@ -90,6 +95,19 @@ const Login = () => {
                   height: "40px",
                 }}
               />
+              <div style={{ textAlign: "center", marginTop: "8px" }}>
+                <span
+                  style={{
+                    cursor: "pointer",
+                    fontSize: "16px",
+                    color: "#ff9933",
+                    fontWeight: "bold",
+                  }}
+                  onClick={() => navigate("/forgetpassword")}
+                >
+                  Forget Password?
+                </span>
+              </div>
             </div>
             <button
               className="mt-4 container py-2"

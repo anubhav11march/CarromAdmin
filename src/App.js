@@ -16,6 +16,7 @@ import Upload from "./components/Upload/Upload";
 import Control from "./components/Control/Control";
 import Content from "./components/Content/Content";
 import Access from "./components/Access/Access";
+import ForgetPasswordScreen from "./components/forgetPasswordScreen/ForgetPasswordScreen";
 
 function App() {
   return (
@@ -25,7 +26,11 @@ function App() {
           className="col-2"
           style={{
             background: "#EFEDED",
-            display: window.location.pathname === "/" ? "none" : "",
+            display:
+              window.location.pathname === "/" ||
+              window.location.pathname === "/forgetpassword"
+                ? "none"
+                : "",
           }}
         >
           {window.location.pathname === "/" ? "" : <Sidebar />}
@@ -34,11 +39,21 @@ function App() {
           className={window.location.pathname === "/" ? "col-12 p-0" : "col-10"}
           style={{ overflow: "auto", height: "100vh" }}
         >
-          {window.location.pathname === "/" ? "" : <Header />}
+          {window.location.pathname === "/" ||
+          window.location.pathname === "/forgetpassword" ? (
+            ""
+          ) : (
+            <Header />
+          )}
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="*" element={<Login />} />
 
+            <Route
+              exact
+              path="/forgetPassword"
+              element={<ForgetPasswordScreen />}
+            />
             <Route exact path="/dashboard" element={<Dashboard />} />
             <Route exact path="/user" element={<Usermanage />} />
             <Route exact path="/revenue" element={<Revenue />} />
