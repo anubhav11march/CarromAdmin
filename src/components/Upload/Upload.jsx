@@ -42,6 +42,7 @@ const Upload = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("working");
     if (!fileURL) {
       if (!file) {
         alert("Upload file or attach link");
@@ -50,14 +51,15 @@ const Upload = () => {
       const fileRef = ref(storage, `uploadimages/${fileName + v4()}`);
       const next = await uploadBytes(fileRef, file);
       const url = await getDownloadURL(next.ref);
+      // console.log(fileRef, next, url);
       let input;
       if (choice === "Top Banner") input = { top: url };
-      if (choice === "Game1 Thumbnail") input = { game1: fileURL };
-      if (choice === "Game2 Thumbnail") input = { game2: fileURL };
-      if (choice === "Game3 Thumbnail") input = { game3: fileURL };
-      if (choice === "Game4 Thumbnail") input = { game4: fileURL };
-      if (choice === "Game5 Thumbnail") input = { game5: fileURL };
-      if (choice === "Game6 Thumbnail") input = { game6: fileURL };
+      if (choice === "Game1 Thumbnail") input = { game1: url };
+      if (choice === "Game2 Thumbnail") input = { game2: url };
+      if (choice === "Game3 Thumbnail") input = { game3: url };
+      if (choice === "Game4 Thumbnail") input = { game4: url };
+      if (choice === "Game5 Thumbnail") input = { game5: url };
+      if (choice === "Game6 Thumbnail") input = { game6: url };
       if (choice === "Bottom Banner") input = { bottom: url };
       const data1 = await UpdateUploads(data._id, input);
       if (data1.success && data1.message === "Updated Successfuly!") {
@@ -82,6 +84,8 @@ const Upload = () => {
       }
     }
   };
+
+  console.log("file: " + file, "fileName: " + fileName, "fileUrl: " + fileURL);
 
   return (
     <div className="container-fluid ps-4">

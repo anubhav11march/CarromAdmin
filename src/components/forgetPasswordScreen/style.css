@@ -1,0 +1,129 @@
+.forget-password {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text {
+  width: 50%;
+  color: #949494;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 425px;
+  margin: 7%;
+}
+.form-feild {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2%;
+}
+.form-container input {
+  margin-left: 1%;
+  border: 0;
+  /* border-bottom: 1px solid #949494; */
+}
+.form-container input:focus {
+  border-color: rgba(126, 239, 104, 0.8);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset,
+    0 0 8px rgba(247, 157, 11, 0.6);
+  outline: 0 none;
+}
+.sendOtp-btn {
+  /* width: 40%; */
+  border: 0;
+  /* border-radius: 7px; */
+  background-color: #ffa34e;
+  margin-top: 1%;
+  padding: 1%;
+  color: white;
+  font-weight: 600;
+  margin: 4%;
+  width: 100%;
+  max-width: 425px;
+  border-radius: 50px;
+}
+.verOtp-btn {
+  /* width: 40%; */
+  border: 0;
+  /* border-radius: 7px; */
+  background-color: #ffa34e;
+  margin-top: 1%;
+  padding: 1%;
+  color: white;
+  font-weight: 600;
+  margin: 4%;
+  width: 100%;
+  max-width: 425px;
+  border-radius: 50px;
+}
+.clOtp-btn {
+  /* width: 40%; */
+  border: 0;
+  /* border-radius: 7px; */
+  background-color: #ffa34e;
+  margin-top: 1%;
+  padding: 1%;
+  color: white;
+  font-weight: 600;
+  margin: 4%;
+  width: 100%;
+  max-width: 425px;
+  border-radius: 50px;
+}
+.resPass-btn {
+  /* width: 40%; */
+  border: 0;
+  /* border-radius: 7px; */
+  background-color: #ffa34e;
+  margin-top: 1%;
+  padding: 1%;
+  color: white;
+  font-weight: 600;
+  margin: 4%;
+  width: 100%;
+  max-width: 425px;
+  border-radius: 50px;
+}
+.reset-password {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 7%;
+}
+
+.enterotp-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.text {
+  margin-bottom: 0;
+  margin-top: 3%;
+}
+
+@media screen and (max-width: 980px) {
+  .forget-password {
+    font-size: 0.8rem;
+  }
+  .text {
+    width: 75%;
+  }
+}
