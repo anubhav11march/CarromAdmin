@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddChatOption,
   AddCoupon,
@@ -10,12 +10,19 @@ import {
   DeleteWithdrawal,
   GetControl,
   UpdateControls,
+  FetchSocialLinks,
+  AddSocialLink,
+  UpdateSocialLink,
+  DeleteSocialLink,
 } from "../../api";
+import { Spinner } from "react-bootstrap";
 import Modal from "react-modal";
-import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
+import { AiFillEdit, AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import NoImage from "../../assests/no-image.jpg";
 import "./control.css";
 
 const customStyles = {
@@ -66,6 +73,90 @@ const Control = () => {
     SpinWin: 0,
   });
 
+  const [loading, setLoading] = useState(false);
+  const [view, setView] = useState(false);
+  const [state, setState] = useState("AddSocialLink");
+  const [socialLinks, setSocialLinks] = useState([]);
+  const [newLink, setNewLink] = useState({
+    name: "",
+    link: "",
+    image: "",
+  });
+  const [editedLink, setEditedLink] = useState({
+    id: "",
+    name: "",
+    link: "",
+    image: "",
+  });
+
+  const getAllSocialLinks = async () => {
+    setLoading(true);
+    try {
+      const { data } = await FetchSocialLinks();
+      console.log(data?.data);
+      setSocialLinks(data?.data);
+      // setCategories(data?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const AddNewLink = async (e) => {
+    e.preventDefault();
+    if (!newLink.name || !newLink.link || !newLink.image) {
+      window.alert("Please fill all the details.");
+      return;
+    }
+    setView(false);
+    setLoading(true);
+    try {
+      await AddSocialLink(newLink);
+      setNewLink({
+        name: "",
+        link: "",
+        image: "",
+      });
+      getAllSocialLinks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const DeleteLink = async (id) => {
+    const yes = window.confirm("Do you want to delete this social link?");
+    if (yes) {
+      setLoading(true);
+      try {
+        await DeleteSocialLink({ id: id });
+        getAllSocialLinks();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const UpdateLink = async (e) => {
+    e.preventDefault();
+    setView(false);
+    setLoading(true);
+    if (!editedLink.name || !editedLink.link || !editedLink.image) {
+      window.alert("Please fill all the details.");
+      return;
+    }
+    try {
+      await UpdateSocialLink(editedLink);
+      setEditedLink({
+        id: "",
+        name: "",
+        link: "",
+        image: "",
+      });
+      getAllSocialLinks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   React.useEffect(() => {
     const fetchData = async () => {
       const data = await GetControl();
@@ -74,6 +165,10 @@ const Control = () => {
     };
     fetchData();
   }, [modalIsOpen, modalIsOpen1, modalIsOpen2, modalIsOpen3, modalIsOpen4]);
+
+  useEffect(() => {
+    getAllSocialLinks();
+  }, []);
 
   const handleSave = async () => {
     const data = await UpdateControls({ ...controlData, id: controlData._id });
@@ -515,6 +610,164 @@ const Control = () => {
           </form>
         </div>
       </Modal>
+      <Modal
+        isOpen={view}
+        onRequestClose={() => setView(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div>
+          <div className="d-flex justify-content-end">
+            <button
+              onClick={() => setView(false)}
+              style={{ border: "none", backgroundColor: "white" }}
+            >
+              <span>
+                <AiOutlineClose size={18} />
+              </span>
+            </button>
+          </div>
+          {state === "AddSocialLink" && (
+            <form onSubmit={(e) => AddNewLink(e)}>
+              <div className="mb-3">
+                <label htmlFor="socialMediaName">Social Media Name</label>
+                <input
+                  type="text"
+                  className="form-control mt-3"
+                  id="socialMediaName"
+                  aria-describedby="Entry Fees"
+                  name="socialMediaName"
+                  placeholder="Name"
+                  value={newLink.name}
+                  onChange={(e) =>
+                    setNewLink({ ...newLink, name: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="socialMediaLink">Social Media Link</label>
+                <input
+                  type="url"
+                  className="form-control mt-3"
+                  id="socialMediaLink"
+                  aria-describedby="Entry Fees"
+                  name="socialMediaLink"
+                  placeholder="Link"
+                  value={newLink.link}
+                  onChange={(e) =>
+                    setNewLink({ ...newLink, link: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="img-container mb-3">
+                <img src={newLink.image ? newLink.image : NoImage} alt="" />
+                <p
+                  style={{
+                    fontSize: "11px",
+                    textAlign: "left",
+                    color: "red",
+                    marginTop: "4px",
+                  }}
+                >
+                  *Uploaded image should be 45px X 45px
+                </p>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="Amount">Upload Social Media Icon</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setNewLink({
+                      ...newLink,
+                      image: URL.createObjectURL(e.target.files[0]),
+                    })
+                  }
+                  className="form-control mt-3"
+                />
+              </div>
+              <div className="d-flex justify-content-center">
+                <button type="submit" className="button-style">
+                  Add
+                </button>
+              </div>
+            </form>
+          )}
+          {state === "EditSocialLink" && (
+            <form onSubmit={(e) => UpdateLink(e)}>
+              <div className="mb-3">
+                <label htmlFor="socialMediaName">Social Media Name</label>
+                <input
+                  type="text"
+                  className="form-control mt-3"
+                  id="socialMediaName"
+                  aria-describedby="Entry Fees"
+                  name="socialMediaName"
+                  placeholder="Name"
+                  value={editedLink.name}
+                  onChange={(e) =>
+                    setEditedLink({ ...editedLink, name: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="socialMediaLink">Social Media Link</label>
+                <input
+                  type="url"
+                  className="form-control mt-3"
+                  id="socialMediaLink"
+                  aria-describedby="Entry Fees"
+                  name="socialMediaLink"
+                  placeholder="Link"
+                  value={editedLink.link}
+                  onChange={(e) =>
+                    setEditedLink({ ...editedLink, link: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="img-container mb-3">
+                <img
+                  src={editedLink.image ? editedLink.image : NoImage}
+                  alt=""
+                />
+                <p
+                  style={{
+                    fontSize: "11px",
+                    textAlign: "left",
+                    color: "red",
+                    marginTop: "4px",
+                  }}
+                >
+                  *Uploaded image should be 45px X 45px
+                </p>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="Amount">Upload Social Media Icon</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) =>
+                    setEditedLink({
+                      ...editedLink,
+                      image: URL.createObjectURL(e.target.files[0]),
+                    })
+                  }
+                  className="form-control mt-3"
+                />
+              </div>
+              <div className="d-flex justify-content-center">
+                <button type="submit" className="button-style">
+                  Update
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+      </Modal>
       <div className="mt-5 pt-5"></div>
       <div
         className="row"
@@ -880,7 +1133,7 @@ const Control = () => {
         </div>
       </div>
       <div className="row">
-        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add to Cash</div>
+        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add to Chat</div>
         <div className="d-flex justify-content-start my-4 align-items-center">
           {controlData.coupons.map((item, id) => (
             <div
@@ -1009,6 +1262,122 @@ const Control = () => {
               />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ fontSize: "22px", fontWeight: "550" }}>
+            Add Social Links
+          </div>
+          <button
+            style={{
+              border: "none",
+              background: "#FF9933",
+              color: "white",
+              borderRadius: "8px",
+              height: "40px",
+              width: "100px",
+            }}
+            onClick={() => {
+              setState("AddSocialLink");
+              setView(true);
+            }}
+          >
+            Save
+          </button>
+        </div>
+        <div className="d-flex justify-content-start my-4 align-items-center">
+          {loading ? (
+            <div className="w-100 my-5 d-flex justify-content-center align-items-center">
+              <Spinner animation="border" variant="warning" />
+            </div>
+          ) : socialLinks.length !== 0 ? (
+            <div className="category-cards">
+              {socialLinks.map((social, index) => (
+                <div className="category-card" key={index}>
+                  <div className="top mb-3">
+                    <h6
+                      style={{
+                        cursor: "pointer",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {social?.name}
+                    </h6>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                      }}
+                    >
+                      <AiFillEdit
+                        size={16}
+                        color="#ff9933"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setState("EditSocialLink");
+                          setView(true);
+                          setEditedLink({
+                            id: social?._id,
+                            name: social?.name,
+                            link: social?.link,
+                            image: social?.image,
+                          });
+                        }}
+                      />
+                      <div
+                        style={{
+                          width: "25px",
+                          height: "25px",
+                          display: "grid",
+                          placeContent: "center",
+                          backgroundColor: "lightgrey",
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => DeleteLink(social._id)}
+                      >
+                        <MdDelete size={16} color="rgba(18, 18, 18, 0.5)" />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <img
+                      src={social?.image}
+                      alt=""
+                      style={{
+                        cursor: "pointer",
+                        height: "45px",
+                        maxWidth: "45px",
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </div>
+                  <a
+                    href={social?.link}
+                    style={{
+                      textDecoration: "none",
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {social?.link}
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <h5 className="text-center mb-5">No Social Links To Display</h5>
+          )}
         </div>
       </div>
       <div className="row">

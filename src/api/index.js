@@ -5,6 +5,17 @@ const url = "https://carom0.herokuapp.com/admin";
 
 const token = Cookies.get("token");
 
+const API = axios.create({
+  baseURL: "https://carom0.herokuapp.com",
+});
+
+API.interceptors.request.use((req) => {
+  if (token) {
+    req.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return req;
+});
+
 export const LoginAdmin = async (email, password) => {
   try {
     const { data } = await axios.post(url + "/login", {
@@ -521,7 +532,7 @@ export const AddChatOption = async (input) => {
     const { data } = await axios.post(
       url + "/addChatOption",
       {
-        ...input
+        ...input,
       },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -545,3 +556,8 @@ export const DeleteChat = async (input) => {
     console.log(err);
   }
 };
+
+export const FetchSocialLinks = () => API.get("/admin/link");
+export const AddSocialLink = (data) => API.post("/admin/addLink", data);
+export const UpdateSocialLink = (data) => API.post("/admin/updateLink", data);
+export const DeleteSocialLink = (data) => API.post("/admin/deleteLink", data);
