@@ -1133,7 +1133,7 @@ const Control = () => {
         </div>
       </div>
       <div className="row">
-        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add to Chat</div>
+        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add Cash</div>
         <div className="d-flex justify-content-start my-4 align-items-center">
           {controlData.coupons.map((item, id) => (
             <div
@@ -1270,6 +1270,7 @@ const Control = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            maxWidth: "480px",
           }}
         >
           <div style={{ fontSize: "22px", fontWeight: "550" }}>
@@ -1282,14 +1283,14 @@ const Control = () => {
               color: "white",
               borderRadius: "8px",
               height: "40px",
-              width: "100px",
+              width: "125px",
             }}
             onClick={() => {
               setState("AddSocialLink");
               setView(true);
             }}
           >
-            Save
+            Add Link
           </button>
         </div>
         <div className="d-flex justify-content-start my-4 align-items-center">
@@ -1381,7 +1382,7 @@ const Control = () => {
         </div>
       </div>
       <div className="row">
-        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add to Cash</div>
+        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add Chats</div>
         <div className="d-flex justify-content-start my-4 align-items-center">
           <div
             className="d-flex flex-column align-items-start me-5 p-3"
