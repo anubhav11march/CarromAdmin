@@ -10,3 +10,36 @@
   color: rgb(104, 106, 106);
   cursor: pointer;
 }
+
+.category-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.category-card {
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 200px;
+}
+
+.category-card .top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.img-container img {
+  width: 45px;
+  height: 45px;
+  border: 2px solid var(--clr-lightgrey);
+  border-radius: 50%;
+}
