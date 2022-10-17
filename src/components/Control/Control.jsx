@@ -1393,7 +1393,7 @@ const Control = () => {
             }}
           >
             <div className="" style={{ width: "260px" }}>
-              <div
+              {/* <div
                 className="d-flex"
                 style={{
                   fontSize: "18px",
@@ -1408,7 +1408,7 @@ const Control = () => {
                 >
                   +
                 </div>
-              </div>
+              </div> */}
               <div className="d-flex pt-2 justify-content-between flex-wrap">
                 {controlData?.chatOptions.map((item, id) => (
                   <div className="d-flex align-items-center px-3 py-2" key={id}>
