@@ -172,8 +172,8 @@ const Transaction = () => {
                           .reverse()
                           .join("-")}
                       </td>
-                      <td>Rs.{item?.wallet}</td>
-                      <td>Rs.{item?.amount}</td>
+                      <td>${item?.wallet ? item?.wallet : 0}</td>
+                      <td>${item?.amount}</td>
                       <td>{item?.method}</td>
                       <td style={{ fontWeight: "500" }}>
                         <span

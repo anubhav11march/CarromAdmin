@@ -2,7 +2,12 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./sidebar.css";
 import { RiDashboardFill } from "react-icons/ri";
-import { FaUser, FaCoins, FaChalkboardTeacher,FaQuestionCircle } from "react-icons/fa";
+import {
+  FaUser,
+  FaCoins,
+  FaChalkboardTeacher,
+  FaQuestionCircle,
+} from "react-icons/fa";
 import { MdUpload } from "react-icons/md";
 import { IoGameControllerSharp } from "react-icons/io5";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -40,14 +45,14 @@ const button = [
   {
     url: "/deposit",
     icon: <FaCoins size={25} />,
-    title: "Deposits Mnagment",
+    title: "Deposits Managment",
     active: false,
     id: 4,
   },
   {
     url: "/withdawal",
     icon: <FaCoins size={25} />,
-    title: "Withdrawl Mnagement",
+    title: "Withdrawl Management",
     active: false,
     id: 5,
   },

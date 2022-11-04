@@ -25,6 +25,7 @@ export const LoginAdmin = async (email, password) => {
     return data;
   } catch (err) {
     console.log(err);
+    return err?.response?.data;
   }
 };
 

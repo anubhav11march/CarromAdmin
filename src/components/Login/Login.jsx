@@ -11,11 +11,14 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
     const data = await LoginAdmin(user.email, user.password);
-    if (data.success && data.message === "Login Successfuly!") {
+    console.log(data);
+    if (data.success && data?.message === "Login Successfuly!") {
       Cookies.set("token", data.data.token);
       Cookies.set("user", JSON.stringify(data?.data.user));
       navigate("/dashboard");
       window.location.reload();
+    } else {
+      window.alert(data.error);
     }
   };
 
@@ -46,7 +49,7 @@ const Login = () => {
           <p className="mt-2" style={{ color: "#00000082", fontSize: "15px" }}>
             See your growth and get all the information about your product.
           </p>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={(e) => handleLogin(e)}>
             <div className="mb-3">
               <label
                 htmlFor="exampleInputEmail1"
