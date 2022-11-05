@@ -1,12 +1,12 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const url = "https://carom0.herokuapp.com/admin";
+const url = "https://api.playwingo.app/admin";
 
 const token = Cookies.get("token");
 
 const API = axios.create({
-  baseURL: "https://carom0.herokuapp.com",
+  baseURL: "https://api.playwingo.app",
 });
 
 API.interceptors.request.use((req) => {
