@@ -14,8 +14,9 @@ import {
   AddSocialLink,
   UpdateSocialLink,
   DeleteSocialLink,
+  AddNotification,
 } from "../../api";
-import { Spinner } from "react-bootstrap";
+import { Spinner, Toast } from "react-bootstrap";
 import Modal from "react-modal";
 import { AiFillEdit, AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";
@@ -46,6 +47,7 @@ const Control = () => {
   const [modalIsOpen2, setIsOpen2] = React.useState(false);
   const [modalIsOpen3, setIsOpen3] = React.useState(false);
   const [modalIsOpen4, setIsOpen4] = React.useState(false);
+  const [modalIsOpen5, setIsOpen5] = React.useState(false);
   const [img, setImg] = React.useState("");
   const [input, setInput] = React.useState({ deposit: "", withdawal: "" });
   const [inputChat, setInputChat] = React.useState({ option: "" });
@@ -82,6 +84,31 @@ const Control = () => {
     link: "",
     image: "",
   });
+  const [notification, setNotification] = useState({
+    title: "",
+    description: "",
+  });
+  //TODO:send Notification
+
+  const sendNotification = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await AddNotification(notification);
+      setIsOpen5(false);
+      console.log(res);
+      setLoading(false);
+      alert("Notification Sent Successfully");
+      if (res.status === 200) {
+        setIsOpen5(false);
+        setNotification({ title: "", description: "" });
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
   const [editedLink, setEditedLink] = useState({
     id: "",
     name: "",
@@ -347,6 +374,9 @@ const Control = () => {
   function openModalChat() {
     setIsOpen4(true);
   }
+  function openModalNotification() {
+    setIsOpen5(true);
+  }
 
   function closeModalChat() {
     setIsOpen4(false);
@@ -371,6 +401,9 @@ const Control = () => {
 
   const handleModalChat = () => {
     openModalChat();
+  };
+  const handleNotificationModal = () => {
+    openModalNotification();
   };
 
   return (
@@ -766,6 +799,66 @@ const Control = () => {
               </div>
             </form>
           )}
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalIsOpen5}
+        onRequestClose={() => setIsOpen5(false)}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <div>
+          <div className="d-flex justify-content-end">
+            <button
+              onClick={() => setIsOpen5(false)}
+              style={{ border: "none", backgroundColor: "white" }}
+            >
+              <span>
+                <AiOutlineClose size={18} />
+              </span>
+            </button>
+          </div>
+          <form onSubmit={(e) => sendNotification(e)}>
+            <div className="mb-3">
+              <label htmlFor="socialMediaName">Notification Message</label>
+              <input
+                type="text"
+                className="form-control mt-3"
+                id="socialMediaName"
+                aria-describedby="Entry Fees"
+                name="title"
+                placeholder="notification message"
+                onChange={(e) =>
+                  setNotification({ ...notification, title: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="socialMediaName">Notification Description</label>
+              <textarea
+                type="text"
+                className="form-control mt-3"
+                id="socialMediaName"
+                aria-describedby="Entry Fees"
+                name="description"
+                placeholder="notification description"
+                onChange={(e) =>
+                  setNotification({
+                    ...notification,
+                    description: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+
+            <div className="d-flex justify-content-center">
+              <button type="submit w-100" className="button-style">
+                {loading ? "Sending..." : "Send"}
+              </button>
+            </div>
+          </form>
         </div>
       </Modal>
       <div className="mt-5 pt-5"></div>
@@ -1382,53 +1475,93 @@ const Control = () => {
         </div>
       </div>
       <div className="row">
-        <div style={{ fontSize: "22px", fontWeight: "550" }}>Add Chats</div>
-        <div className="d-flex justify-content-start my-4 align-items-center">
-          <div
-            className="d-flex flex-column align-items-start me-5 p-3"
-            style={{
-              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-              borderRadius: "15px",
-              width: "300px",
-            }}
-          >
-            <div className="" style={{ width: "260px" }}>
-              <div
-                className="d-flex"
-                style={{
-                  fontSize: "18px",
-                  color: "#6A6A6A",
-                  fontWeight: "500",
-                }}
-              >
-                <div>Chats</div>
+        <div className="col-6">
+          <div style={{ fontSize: "22px", fontWeight: "550" }}>Add Chats</div>
+          <div className="d-flex justify-content-start my-4 align-items-center">
+            <div
+              className="d-flex flex-column align-items-start me-5 p-3"
+              style={{
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+                borderRadius: "15px",
+                width: "300px",
+              }}
+            >
+              <div className="" style={{ width: "260px" }}>
                 <div
-                  className="ms-3 d-flex justify-content-center align-items-center addsymbol"
-                  onClick={handleModalChat}
+                  className="d-flex"
+                  style={{
+                    fontSize: "18px",
+                    color: "#6A6A6A",
+                    fontWeight: "500",
+                  }}
                 >
-                  +
+                  <div>Chats</div>
+                  <div
+                    className="ms-3 d-flex justify-content-center align-items-center addsymbol"
+                    onClick={handleModalChat}
+                  >
+                    +
+                  </div>
+                </div>
+                <div className="d-flex pt-2 justify-content-between flex-wrap">
+                  {controlData?.chatOptions.map((item, id) => (
+                    <div
+                      className="d-flex align-items-center px-3 py-2"
+                      key={id}
+                    >
+                      <div>{id + 1}.</div>
+                      <div
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          marginLeft: "7px",
+                        }}
+                      >
+                        {item}{" "}
+                        <AiOutlineDelete
+                          className="ms-2"
+                          onClick={() => handleDeleteChat(item)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div className="d-flex pt-2 justify-content-between flex-wrap">
-                {controlData?.chatOptions.map((item, id) => (
-                  <div className="d-flex align-items-center px-3 py-2" key={id}>
-                    <div>{id + 1}.</div>
-                    <div
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        marginLeft: "7px",
-                      }}
-                    >
-                      {item}{" "}
-                      <AiOutlineDelete
-                        className="ms-2"
-                        onClick={() => handleDeleteChat(item)}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-6">
+          <div style={{ fontSize: "22px", fontWeight: "550" }}>
+            Add Notification
+          </div>
+          <div className="d-flex justify-content-start my-4 align-items-center">
+            <div
+              className="d-flex flex-column align-items-start me-5 p-3"
+              style={{
+                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+                borderRadius: "15px",
+                width: "300px",
+              }}
+            >
+              <div className="" style={{ width: "260px" }}>
+                <div
+                  className="d-flex"
+                  style={{
+                    fontSize: "18px",
+                    color: "#6A6A6A",
+                    fontWeight: "500",
+                  }}
+                >
+                  <div>Notifications</div>
+                  <div
+                    className="ms-3 d-flex justify-content-center align-items-center addsymbol"
+                    onClick={handleNotificationModal}
+                  >
+                    +
                   </div>
-                ))}
+                </div>
+                <div className="d-flex pt-2 justify-content-between flex-wrap"></div>
               </div>
             </div>
           </div>

@@ -482,6 +482,16 @@ export const AddCoupon = async (input) => {
     console.log(err);
   }
 };
+export const AddNotification = async (input) => {
+  try {
+    const { data } = await axios.post(url + "/sendNotification", input, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export const DeleteDeposit = async (id) => {
   try {
