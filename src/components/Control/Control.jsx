@@ -124,6 +124,7 @@ const Control = () => {
     link: "",
     image: "",
   });
+  const [imageLoading, setImageLoading] = useState(false);
 
   const getAllSocialLinks = async () => {
     setLoading(true);
@@ -201,6 +202,33 @@ const Control = () => {
       console.log(error);
     }
   };
+
+  const handleLinkImage = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    if (!file) {
+      window.alert("Please attach the image");
+      return;
+    }
+    setImageLoading(true);
+    const fileRef = ref(storage, `social-link/${file.name + v4()}`);
+    const next = await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(next.ref);
+    if (state === "AddSocialLink") {
+      setNewLink({
+        ...newLink,
+        image: url,
+      });
+    } else {
+      setEditedLink({
+        ...editedLink,
+        image: url,
+      });
+    }
+    setImageLoading(false);
+  };
+
+  console.log(editedLink);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -757,37 +785,44 @@ const Control = () => {
                   required
                 />
               </div>
-              <div className="img-container mb-3">
-                <img src={newLink.image ? newLink.image : NoImage} alt="" />
-                <p
-                  style={{
-                    fontSize: "11px",
-                    textAlign: "left",
-                    color: "red",
-                    marginTop: "4px",
-                  }}
-                >
-                  *Uploaded image should be 45px X 45px
-                </p>
-              </div>
+              {imageLoading ? (
+                <div className="w-100 my-5 d-flex justify-content-center align-items-center">
+                  <Spinner animation="border" variant="warning" />
+                </div>
+              ) : (
+                <div className="img-container mb-3">
+                  <img src={newLink.image ? newLink.image : NoImage} alt="" />
+                  <p
+                    style={{
+                      fontSize: "11px",
+                      textAlign: "left",
+                      color: "red",
+                      marginTop: "4px",
+                    }}
+                  >
+                    *Uploaded image should be 45px X 45px
+                  </p>
+                </div>
+              )}
               <div className="mb-3">
                 <label htmlFor="Amount">Upload Social Media Icon</label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setNewLink({
-                      ...newLink,
-                      image: URL.createObjectURL(e.target.files[0]),
-                    })
-                  }
+                  onChange={(e) => handleLinkImage(e)}
                   className="form-control mt-3"
                 />
               </div>
               <div className="d-flex justify-content-center">
-                <button type="submit" className="button-style">
-                  Add
-                </button>
+                {imageLoading ? (
+                  <div className="w-100 my-5 d-flex justify-content-center align-items-center">
+                    <Spinner animation="border" variant="warning" />
+                  </div>
+                ) : (
+                  <button type="submit" className="button-style">
+                    Add
+                  </button>
+                )}
               </div>
             </form>
           )}
@@ -825,40 +860,47 @@ const Control = () => {
                   required
                 />
               </div>
-              <div className="img-container mb-3">
-                <img
-                  src={editedLink.image ? editedLink.image : NoImage}
-                  alt=""
-                />
-                <p
-                  style={{
-                    fontSize: "11px",
-                    textAlign: "left",
-                    color: "red",
-                    marginTop: "4px",
-                  }}
-                >
-                  *Uploaded image should be 45px X 45px
-                </p>
-              </div>
+              {imageLoading ? (
+                <div className="w-100 my-5 d-flex justify-content-center align-items-center">
+                  <Spinner animation="border" variant="warning" />
+                </div>
+              ) : (
+                <div className="img-container mb-3">
+                  <img
+                    src={editedLink.image ? editedLink.image : NoImage}
+                    alt=""
+                  />
+                  <p
+                    style={{
+                      fontSize: "11px",
+                      textAlign: "left",
+                      color: "red",
+                      marginTop: "4px",
+                    }}
+                  >
+                    *Uploaded image should be 45px X 45px
+                  </p>
+                </div>
+              )}
               <div className="mb-3">
                 <label htmlFor="Amount">Upload Social Media Icon</label>
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) =>
-                    setEditedLink({
-                      ...editedLink,
-                      image: URL.createObjectURL(e.target.files[0]),
-                    })
-                  }
+                  onChange={(e) => handleLinkImage(e)}
                   className="form-control mt-3"
                 />
               </div>
               <div className="d-flex justify-content-center">
-                <button type="submit" className="button-style">
-                  Update
-                </button>
+                {imageLoading ? (
+                  <div className="w-100 my-5 d-flex justify-content-center align-items-center">
+                    <Spinner animation="border" variant="warning" />
+                  </div>
+                ) : (
+                  <button type="submit" className="button-style">
+                    Update
+                  </button>
+                )}
               </div>
             </form>
           )}
