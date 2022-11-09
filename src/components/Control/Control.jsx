@@ -15,6 +15,8 @@ import {
   UpdateSocialLink,
   DeleteSocialLink,
   AddNotification,
+  DeleteNotification,
+  FetchNotifications,
 } from "../../api";
 import { Spinner, Toast } from "react-bootstrap";
 import Modal from "react-modal";
@@ -48,8 +50,14 @@ const Control = () => {
   const [modalIsOpen3, setIsOpen3] = React.useState(false);
   const [modalIsOpen4, setIsOpen4] = React.useState(false);
   const [modalIsOpen5, setIsOpen5] = React.useState(false);
+  const [notificationData, setNotificationData] = useState([]);
   const [img, setImg] = React.useState("");
-  const [input, setInput] = React.useState({ deposit: "", withdawal: "" });
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [input, setInput] = React.useState({
+    deposit: "",
+    withdawal: "",
+    mobileNumber: "",
+  });
   const [inputChat, setInputChat] = React.useState({ option: "" });
   const [fileDeposit, setFileDeposit] = React.useState();
   const [fileWithdrawal, setFileWithdrawal] = React.useState();
@@ -98,6 +106,7 @@ const Control = () => {
       setIsOpen5(false);
       console.log(res);
       setLoading(false);
+      getAllNotifications();
       alert("Notification Sent Successfully");
       if (res.status === 200) {
         setIsOpen5(false);
@@ -147,6 +156,15 @@ const Control = () => {
       getAllSocialLinks();
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getAllNotifications = async () => {
+    try {
+      const { data } = await FetchNotifications();
+      setNotificationData(data?.data);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -223,6 +241,7 @@ const Control = () => {
 
   useEffect(() => {
     getAllSocialLinks();
+    getAllNotifications();
   }, []);
 
   const handleSave = async () => {
@@ -262,6 +281,7 @@ const Control = () => {
   };
 
   const handleAddDeposit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     if (!fileDeposit) {
       alert("attach the image");
@@ -270,12 +290,14 @@ const Control = () => {
     const fileRef = ref(storage, `depositMethods/${fileDeposit.name + v4()}`);
     const next = await uploadBytes(fileRef, fileDeposit);
     const url = await getDownloadURL(next.ref);
-    const data = await AddDeposit(input.deposit, url);
+    const data = await AddDeposit(input.deposit, url, input.mobileNumber);
     if (data.success && data.message === "Added Successfuly!") {
+      setLoading(false);
       setInput((old) => {
         return { ...old, deposit: "" };
       });
       setFileDeposit();
+      setLoading(false);
       closeModalDeposit();
     }
   };
@@ -328,12 +350,21 @@ const Control = () => {
   };
 
   const handleDeleteDeposit = async (id) => {
-    const data = await DeleteDeposit(id);
-    if (data.success && data.message === "Deleted Successfuly!") {
-      setControlData((old) => {
-        const deposit = old.depositMethods.filter((item) => item?._id !== id);
-        return { ...old, depositMethods: deposit };
-      });
+    const yes = window.confirm("Do you want to delete this deposit method?");
+    if (yes) {
+      try {
+        const data = await DeleteDeposit(id);
+        if (data.success && data.message === "Deleted Successfuly!") {
+          setControlData((old) => {
+            const deposit = old.depositMethods.filter(
+              (item) => item?._id !== id
+            );
+            return { ...old, depositMethods: deposit };
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -354,6 +385,21 @@ const Control = () => {
         const deposit = old.coupons.filter((item) => item?._id !== id);
         return { ...old, coupons: deposit };
       });
+    }
+  };
+  const handleNotificationDelete = async (id) => {
+    const yes = window.confirm(
+      "Are you sure you want to delete this notification?"
+    );
+    if (yes) {
+      try {
+        const data = await DeleteNotification(id);
+        if (data.success) {
+          getAllNotifications();
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
@@ -422,8 +468,9 @@ const Control = () => {
     openModalCoupon();
   };
 
-  const handleImageModal = (img) => {
+  const handleImageModal = (img, mobile) => {
     setImg(img);
+    setMobileNumber(mobile);
     openModalImage();
   };
 
@@ -476,9 +523,19 @@ const Control = () => {
                 className="mt-3"
               />
             </div>
-            <div className="d-flex justify-content-center">
-              <button type="submit" className="button-style">
-                Add
+            <div>
+              <label htmlFor="Coins">Mobile Number</label>
+            </div>
+            <input
+              type="text"
+              className="form-control mt-3"
+              name="mobileNumber"
+              onChange={handleInputPay}
+              // value={controlData.depositNumber}
+            />
+            <div className="d-flex justify-content-center mt-2">
+              <button type="submit" className="button-style" disabled={loading}>
+                {loading ? "Adding..." : "Add"}
               </button>
             </div>
           </form>
@@ -630,6 +687,12 @@ const Control = () => {
           <div className="container-fluid p-3">
             <img src={img} alt="no img" />
           </div>
+          {mobileNumber && (
+            <div className="container-fluid p-3">
+              <label className="my-2">Mobile Number</label>
+              <input className="form-control" value={mobileNumber} readOnly />
+            </div>
+          )}
         </div>
       </Modal>
       <Modal
@@ -941,28 +1004,7 @@ const Control = () => {
               </div>
             </div>
             <div className="d-flex ps-2 justify-content-between">
-              <div className="">
-                <div
-                  style={{
-                    fontSize: "18px",
-                    color: "#6A6A6A",
-                    fontWeight: "500",
-                  }}
-                >
-                  Phone Number
-                </div>
-                <input
-                  type="text"
-                  style={{
-                    border: "none",
-                    borderBottom: "2px solid #AEB1D4",
-                    width: "140px",
-                  }}
-                  name="depositNumber"
-                  onChange={handleChangeControl}
-                  value={controlData.depositNumber}
-                />
-              </div>
+              <div className=""></div>
               <div className="ms-3" style={{ width: "260px" }}>
                 <div
                   className="d-flex"
@@ -989,16 +1031,24 @@ const Control = () => {
                       <div>{id + 1}.</div>
                       <div
                         style={{
+                          display: "flex",
+                          alignItems: "center",
                           fontSize: "16px",
                           fontWeight: "600",
                           marginLeft: "7px",
                           cursor: "pointer",
                         }}
-                        onClick={() => handleImageModal(item?.image)}
                       >
-                        {item?.name}{" "}
+                        <h6
+                          className="pt-1"
+                          onClick={() =>
+                            handleImageModal(item?.image, item?.mobileNumber)
+                          }
+                        >
+                          {item?.name}
+                        </h6>
                         <AiOutlineDelete
-                          className="ms-2"
+                          className="ms-2 mx-2"
                           onClick={() => handleDeleteDeposit(item?._id)}
                         />
                       </div>
@@ -1603,7 +1653,30 @@ const Control = () => {
                     +
                   </div>
                 </div>
-                <div className="d-flex pt-2 justify-content-between flex-wrap"></div>
+                <div className="d-flex pt-2 justify-content-between flex-wrap">
+                  {notificationData?.map((item, id) => (
+                    <div
+                      className="d-flex align-items-center px-3 py-2"
+                      key={id}
+                    >
+                      <div>{id + 1}.</div>
+                      <div
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "600",
+                          marginLeft: "7px",
+                        }}
+                      >
+                        {item?.title}
+                        <AiOutlineDelete
+                          className="ms-2 mx-2"
+                          onClick={() => handleNotificationDelete(item?._id)}
+                          style={{ cursor: "pointer" }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

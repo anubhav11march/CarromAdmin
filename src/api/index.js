@@ -430,7 +430,7 @@ export const UpdateControls = async (input) => {
   }
 };
 
-export const AddDeposit = async (input, image) => {
+export const AddDeposit = async (input, image, mobileNumber) => {
   try {
     const { data } = await axios.post(
       url + "/addDepositMethod",
@@ -438,6 +438,7 @@ export const AddDeposit = async (input, image) => {
         method: {
           name: input,
           image: image,
+          mobileNumber: mobileNumber,
         },
       },
       { headers: { Authorization: `Bearer ${token}` } }
@@ -459,6 +460,20 @@ export const AddWithdrawal = async (input, image) => {
         },
       },
       { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+export const DeleteNotification = async (id) => {
+  try {
+    const { data } = await axios.post(
+      url + "/deleteNotification",
+      { id: id },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
     return data;
   } catch (err) {
@@ -569,6 +584,7 @@ export const DeleteChat = async (input) => {
 };
 
 export const FetchSocialLinks = () => API.get("/admin/link");
+export const FetchNotifications = () => API.get("/admin/getNotification");
 export const AddSocialLink = (data) => API.post("/admin/addLink", data);
 export const UpdateSocialLink = (data) => API.post("/admin/updateLink", data);
 export const DeleteSocialLink = (data) => API.post("/admin/deleteLink", data);
