@@ -17,11 +17,11 @@
 }
 
 .button-style {
-  margin-top: 5px;
-  width: 100px;
+  margin-top: 16px;
+  width: 100%;
   border: none;
   height: 40px;
-  border-radius: 3px;
+  border-radius: 50px;
   background: #ff9933;
   color: white;
   font-size: 18px;
