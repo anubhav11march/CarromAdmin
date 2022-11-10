@@ -35,6 +35,10 @@ export const GetDashboard = async (date) => {
       params: { date: date },
       headers: { Authorization: `Bearer ${token}` },
     });
+    if (data.statusCode === 401) {
+      alert("You are not authorized to access this page");
+      return;
+    }
     return data;
   } catch (err) {
     console.log(err);
@@ -449,7 +453,7 @@ export const AddDeposit = async (input, image, mobileNumber) => {
   }
 };
 
-export const AddWithdrawal = async (input, image) => {
+export const AddWithdrawal = async (input, image, mobile) => {
   try {
     const { data } = await axios.post(
       url + "/addWithdawalMethod",
@@ -457,6 +461,7 @@ export const AddWithdrawal = async (input, image) => {
         method: {
           name: input,
           image: image,
+          mobileNumber: mobile,
         },
       },
       { headers: { Authorization: `Bearer ${token}` } }
