@@ -314,7 +314,7 @@ const Control = () => {
     );
     const next = await uploadBytes(fileRef, fileWithdrawal);
     const url = await getDownloadURL(next.ref);
-    const data = await AddWithdrawal(input.withdawal, url);
+    const data = await AddWithdrawal(input.withdawal, url, input.mobileNumber);
     if (data.success && data.message === "Added Successfuly!") {
       setInput((old) => {
         return { ...old, withdawal: "" };
@@ -369,12 +369,24 @@ const Control = () => {
   };
 
   const handleDeleteWithdrawal = async (id) => {
-    const data = await DeleteWithdrawal(id);
-    if (data.success && data.message === "Deleted Successfuly!") {
-      setControlData((old) => {
-        const deposit = old.withdawalMethods.filter((item) => item?._id !== id);
-        return { ...old, withdawalMethods: deposit };
-      });
+    const yes = window.confirm("Do you want to delete this deposit method?");
+    if (yes) {
+      setLoading(true);
+      try {
+        const data = await DeleteWithdrawal(id);
+        setLoading(false);
+        if (data.success && data.message === "Deleted Successfuly!") {
+          setControlData((old) => {
+            const deposit = old.withdawalMethods.filter(
+              (item) => item?._id !== id
+            );
+            return { ...old, withdawalMethods: deposit };
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        setLoading(false);
+      }
     }
   };
 
@@ -581,9 +593,19 @@ const Control = () => {
                 className="mt-3"
               />
             </div>
+            <div>
+              <label htmlFor="Coins">Mobile Number</label>
+            </div>
+            <input
+              type="text"
+              className="form-control mt-3"
+              name="mobileNumber"
+              onChange={handleInputPay}
+              // value={controlData.depositNumber}
+            />
             <div className="d-flex justify-content-center">
               <button type="submit" className="button-style">
-                Add
+                {loading ? "Adding..." : "Add"}
               </button>
             </div>
           </form>
@@ -1096,7 +1118,7 @@ const Control = () => {
             </div>
             <div className="d-flex ps-2 justify-content-between">
               <div className="">
-                <div
+                {/* <div
                   style={{
                     fontSize: "18px",
                     color: "#6A6A6A",
@@ -1115,7 +1137,7 @@ const Control = () => {
                   name="withdawalNumber"
                   onChange={handleChangeControl}
                   value={controlData.withdawalNumber}
-                />
+                /> */}
               </div>
               <div className="ms-3 " style={{ width: "260px" }}>
                 <div
@@ -1143,15 +1165,24 @@ const Control = () => {
                       <div>{id + 1}.</div>
                       <div
                         style={{
+                          display: "flex",
+                          alignItems: "center",
                           fontSize: "16px",
                           fontWeight: "600",
                           marginLeft: "7px",
+                          cursor: "pointer",
                         }}
-                        onClick={() => handleImageModal(item?.image)}
                       >
-                        {item?.name}{" "}
+                        <h6
+                          className="pt-1"
+                          onClick={() =>
+                            handleImageModal(item?.image, item?.mobileNumber)
+                          }
+                        >
+                          {item?.name}
+                        </h6>
                         <AiOutlineDelete
-                          className="ms-2"
+                          className="ms-2 mx-2"
                           onClick={() => handleDeleteWithdrawal(item?._id)}
                         />
                       </div>
