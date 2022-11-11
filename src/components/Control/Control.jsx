@@ -593,7 +593,7 @@ const Control = () => {
                 className="mt-3"
               />
             </div>
-            <div>
+            {/* <div>
               <label htmlFor="Coins">Mobile Number</label>
             </div>
             <input
@@ -602,7 +602,7 @@ const Control = () => {
               name="mobileNumber"
               onChange={handleInputPay}
               // value={controlData.depositNumber}
-            />
+            /> */}
             <div className="d-flex justify-content-center">
               <button type="submit" className="button-style">
                 {loading ? "Adding..." : "Add"}
