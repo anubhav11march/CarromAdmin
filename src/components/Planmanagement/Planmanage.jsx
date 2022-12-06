@@ -257,358 +257,359 @@ const Planmanage = () => {
           style={{ fontSize: select ? "20px" : "", cursor: "pointer" }}
           onClick={handleSpin}
         >
-          Spin Game
+          {/* Spin Game */}
         </div>
       </div>
-      {select ? (
-        <div className="ms-3 mt-4">
-          <div
-            className="row mb-4 ms-1"
-            style={{ color: "#FF9933", fontSize: "25px", fontWeight: "500" }}
-          >
-            Tournaments
-          </div>
-          <div className="d-flex justify-content-start my-4 align-items-center flex-wrap">
-            {planData.map((item, id) => (
-              <div
-                className="d-flex flex-column align-items-start me-5 p-3"
-                style={{
-                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
-                  borderRadius: "15px",
-                  
-                  // width: "230px",
-                }}
-                key={item._id}
-              >
+      {
+        select ? (
+          <div className="ms-3 mt-4">
+            <div
+              className="row mb-4 ms-1"
+              style={{ color: "#FF9933", fontSize: "25px", fontWeight: "500" }}
+            >
+              Tournaments
+            </div>
+            <div className="d-flex justify-content-start my-4 align-items-center flex-wrap">
+              {planData.map((item, id) => (
                 <div
-                  className="d-flex justify-content-between"
+                  className="d-flex flex-column align-items-start me-5 p-3"
                   style={{
-                    fontSize: "23px",
-                    fontWeight: "600",
-                    width: "100%",
+                    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+                    borderRadius: "15px",
+
+                    // width: "230px",
                   }}
+                  key={item._id}
                 >
-                  <div>Tournament {id + 1}</div>{" "}
+                  <div
+                    className="d-flex justify-content-between"
+                    style={{
+                      fontSize: "23px",
+                      fontWeight: "600",
+                      width: "100%",
+                    }}
+                  >
+                    <div>Tournament {id + 1}</div>{" "}
+                    <div>
+                      <AiFillEdit
+                        style={{ cursor: "pointer", marginLeft: "25px" }}
+                        onClick={() => handleEdit(item._id)}
+                      />
+                      <AiFillDelete
+                        style={{ cursor: "pointer", marginLeft: "5px" }}
+                        onClick={() => handleDelete(item._id)}
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <AiFillEdit
-                      style={{ cursor: "pointer",marginLeft:"25px" }}
-                      onClick={() => handleEdit(item._id)}
-                    />
-                    <AiFillDelete
-                      style={{ cursor: "pointer", marginLeft: "5px" }}
-                      onClick={() => handleDelete(item._id)}
-                    />
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        marginTop: "20px",
+                        fontWeight: "500",
+                        color: "#6A6A6A",
+                      }}
+                    >
+                      Entry Fee
+                    </div>
+                    <div
+                      type="text"
+                      style={{
+                        marginRight: "10px",
+                        border: "none",
+                        borderBottom: "2px solid #AEB1D4",
+                        width: "40px",
+                      }}
+                    >
+                      {item?.entryFee}
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        marginTop: "20px",
+                        fontWeight: "500",
+                        color: "#6A6A6A",
+                      }}
+                    >
+                      Prize Money
+                    </div>
+                    <div
+                      style={{
+                        marginRight: "10px",
+                        border: "none",
+                        borderBottom: "2px solid #AEB1D4",
+                        width: "40px",
+                      }}
+                    >
+                      {item?.prize}
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        marginTop: "20px",
+                        marginBottom: "10px",
+                        fontWeight: "500",
+                        color: "#6A6A6A",
+                      }}
+                    >
+                      Image:{" "}
+                      <a href={item?.image} target="_blank" rel="noreferrer">
+                        click here
+                      </a>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      marginTop: "20px",
-                      fontWeight: "500",
-                      color: "#6A6A6A",
-                    }}
-                  >
-                    Entry Fee
-                  </div>
-                  <div
-                    type="text"
-                    style={{
-                      marginRight: "10px",
-                      border: "none",
-                      borderBottom: "2px solid #AEB1D4",
-                      width: "40px",
-                    }}
-                  >
-                    {item?.entryFee}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      marginTop: "20px",
-                      fontWeight: "500",
-                      color: "#6A6A6A",
-                    }}
-                  >
-                    Prize Money
-                  </div>
-                  <div
-                    style={{
-                      marginRight: "10px",
-                      border: "none",
-                      borderBottom: "2px solid #AEB1D4",
-                      width: "40px",
-                    }}
-                  >
-                    {item?.prize}
-                  </div>
-                </div>
-                <div>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      marginTop: "20px",
-                      marginBottom: "10px",
-                      fontWeight: "500",
-                      color: "#6A6A6A",
-                    }}
-                  >
-                    Image:{" "}
-                    <a href={item?.image} target="_blank" rel="noreferrer">
-                      click here
-                    </a>
-                  </div>
-                </div>
+              ))}
+              <div
+                className=" d-flex justify-content-center align-items-center add-symbol-big"
+                onClick={openModal}
+              >
+                +
               </div>
-            ))}
-            <div
-              className=" d-flex justify-content-center align-items-center add-symbol-big"
-              onClick={openModal}
-            >
-              +
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="ms-3 mt-4">
-          <div
-            className="d-flex justify-content-between mb-4 ms-1"
-            style={{
-              color: "#FF9933",
-              fontSize: "25px",
-              fontWeight: "500",
-              width: "400px",
-            }}
-          >
-            <div>Amount</div>
-            <div>
-              <button className="button-style" onClick={handleSpinUpdate}>
-                Update
-              </button>
-            </div>
-          </div>
-          <div className="d-flex flex-column  ms-2">
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Violet{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.violet}
-                name="violet"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Purple{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.purple}
-                name="purple"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                White{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.white}
-                name="white"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Red{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.red}
-                name="red"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Blue{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.blue}
-                name="blue"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Green{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.green}
-                name="green"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Orange{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.orange}
-                name="orange"
-                onChange={handleChangeSpin}
-              />
-            </div>
-            <div
-              className="d-flex justify-content-between align-items-center"
-              style={{ width: "150px" }}
-            >
-              <span
-                style={{
-                  color: "#6A6A6A",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                }}
-              >
-                Yellow{" "}
-              </span>
-              <input
-                type="number"
-                style={{
-                  marginRight: "10px",
-                  border: "none",
-                  borderBottom: "2px solid #AEB1D4",
-                  width: "40px",
-                  fontSize: "18px",
-                }}
-                value={spinData?.yellow}
-                name="yellow"
-                onChange={handleChangeSpin}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+        ) : null
+        // <div className="ms-3 mt-4">
+        //   <div
+        //     className="d-flex justify-content-between mb-4 ms-1"
+        //     style={{
+        //       color: "#FF9933",
+        //       fontSize: "25px",
+        //       fontWeight: "500",
+        //       width: "400px",
+        //     }}
+        //   >
+        //     <div>Amount</div>
+        //     <div>
+        //       <button className="button-style" onClick={handleSpinUpdate}>
+        //         Update
+        //       </button>
+        //     </div>
+        //   </div>
+        //   <div className="d-flex flex-column  ms-2">
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Violet{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.violet}
+        //         name="violet"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Purple{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.purple}
+        //         name="purple"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         White{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.white}
+        //         name="white"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Red{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.red}
+        //         name="red"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Blue{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.blue}
+        //         name="blue"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Green{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.green}
+        //         name="green"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Orange{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.orange}
+        //         name="orange"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //     <div
+        //       className="d-flex justify-content-between align-items-center"
+        //       style={{ width: "150px" }}
+        //     >
+        //       <span
+        //         style={{
+        //           color: "#6A6A6A",
+        //           fontWeight: "700",
+        //           fontSize: "22px",
+        //         }}
+        //       >
+        //         Yellow{" "}
+        //       </span>
+        //       <input
+        //         type="number"
+        //         style={{
+        //           marginRight: "10px",
+        //           border: "none",
+        //           borderBottom: "2px solid #AEB1D4",
+        //           width: "40px",
+        //           fontSize: "18px",
+        //         }}
+        //         value={spinData?.yellow}
+        //         name="yellow"
+        //         onChange={handleChangeSpin}
+        //       />
+        //     </div>
+        //   </div>
+        // </div>
+      }
     </div>
   );
 };
