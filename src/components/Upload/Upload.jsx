@@ -43,6 +43,7 @@ const Upload = () => {
 
   const handleSubmit = async () => {
     console.log("working");
+    debugger;
     if (!fileURL) {
       if (!file) {
         alert("Upload file or attach link");
@@ -69,14 +70,14 @@ const Upload = () => {
       }
     } else {
       let input;
-      if (choice === "Top Banner") input = { top: fileURL };
+      if (choice === "Top Banner") input = { topLink: fileURL };
       if (choice === "Game1 Thumbnail") input = { game1: fileURL };
       if (choice === "Game2 Thumbnail") input = { game2: fileURL };
       if (choice === "Game3 Thumbnail") input = { game3: fileURL };
       if (choice === "Game4 Thumbnail") input = { game4: fileURL };
       if (choice === "Game5 Thumbnail") input = { game5: fileURL };
       if (choice === "Game6 Thumbnail") input = { game6: fileURL };
-      if (choice === "Bottom Banner") input = { bottom: fileURL };
+      if (choice === "Bottom Banner") input = { bottomLink: fileURL };
       const data1 = await UpdateUploads(data._id, input);
       if (data1.success && data1.message === "Updated Successfuly!") {
         setFileURL();
@@ -173,48 +174,52 @@ const Upload = () => {
           </div>
         </div>
       </div>
-      <div className="row mt-4">
-        <div
-          className="ps-0"
-          style={{
-            color: "#FF9933",
-            fontSize: "23px",
-            fontWeight: "500",
-            width: "100%",
-            marginBottom: "20px",
-          }}
-        >
-          Attach Link
-        </div>
-        <div className="ps-0">
-          <input
-            type="text"
+      {(choice === "Top Banner" || choice === "Bottom Banner") && (
+        <div className="row mt-4">
+          <div
+            className="ps-0"
             style={{
-              border: "none",
-              borderBottom: "2px solid #AEB1D4",
-              width: "400px",
+              color: "#FF9933",
+              fontSize: "23px",
+              fontWeight: "500",
+              width: "100%",
+              marginBottom: "20px",
             }}
-          />
-        </div>
-        <div className="d-flex justify-content-end mt-4">
-          <button
-            type="text"
-            style={{
-              border: "none",
-              width: "200px",
-              height: "40px",
-              borderRadius: "5px",
-              background: "#FF9933",
-              color: "white",
-              fontSize: "18px",
-              fontWeight: "600",
-            }}
-            onClick={handleSubmit}
           >
-            Submit
-          </button>
+            Attach Link
+          </div>
+          <div className="ps-0">
+            <input
+              type="text"
+              onChange={(e) => setFileURL(e.target.value)}
+              style={{
+                border: "none",
+                borderBottom: "2px solid #AEB1D4",
+                width: "400px",
+              }}
+            />
+          </div>
+
+          <div className="d-flex justify-content-end mt-4">
+            <button
+              type="text"
+              style={{
+                border: "none",
+                width: "200px",
+                height: "40px",
+                borderRadius: "5px",
+                background: "#FF9933",
+                color: "white",
+                fontSize: "18px",
+                fontWeight: "600",
+              }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       <div className="row mb-3" style={{ fontSize: "20px", fontWeight: "600" }}>
         Uploaded
         <div
@@ -223,7 +228,7 @@ const Upload = () => {
         >
           <div className="d-flex flex-column p-3 border mt-3 me-3 justify-content-between align-items-center">
             <img
-              src={data?.top}
+              src={data?.topLink || data?.top}
               alt="no img found"
               style={{ borderRadius: "8px", width: "215px", height: "auto" }}
             />
@@ -231,7 +236,7 @@ const Upload = () => {
           </div>
           <div className="d-flex flex-column p-3 border mt-3 me-3 justify-content-between align-items-center">
             <img
-              src={data?.bottom}
+              src={data?.bottomLink || data?.bottom}
               alt="no img found"
               style={{ borderRadius: "8px", width: "215px", height: "auto" }}
             />
