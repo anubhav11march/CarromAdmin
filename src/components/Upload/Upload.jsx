@@ -228,7 +228,7 @@ const Upload = () => {
         >
           <div className="d-flex flex-column p-3 border mt-3 me-3 justify-content-between align-items-center">
             <img
-              src={data?.topLink || data?.top}
+              src={data?.top}
               alt="no img found"
               style={{ borderRadius: "8px", width: "215px", height: "auto" }}
             />
@@ -236,7 +236,7 @@ const Upload = () => {
           </div>
           <div className="d-flex flex-column p-3 border mt-3 me-3 justify-content-between align-items-center">
             <img
-              src={data?.bottomLink || data?.bottom}
+              src={data?.bottom}
               alt="no img found"
               style={{ borderRadius: "8px", width: "215px", height: "auto" }}
             />
