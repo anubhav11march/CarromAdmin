@@ -70,6 +70,7 @@ const Control = () => {
   const [controlData, setControlData] = React.useState({
     depositNumber: "",
     withdawalNumber: "",
+    CaromWin: 0,
     minDeposit: 0,
     maxDeposit: 0,
     minWithdawal: 0,
@@ -245,8 +246,17 @@ const Control = () => {
   }, []);
 
   const handleSave = async () => {
+    if (controlData.SpinWin < 0 || controlData.SpinWin > 100) {
+      alert(
+        "Spin Win should be greater than 0 and should be less than or equal 100"
+      );
+      return;
+    }
+    setLoading(true);
     const data = await UpdateControls({ ...controlData, id: controlData._id });
+    setLoading(false);
     if (data.success && data.message === "Updated Successfuly!") {
+      alert("Updated Successfully");
     }
   };
 
@@ -593,7 +603,6 @@ const Control = () => {
                 className="mt-3"
               />
             </div>
-
 
             <div className="d-flex justify-content-center">
               <button type="submit" className="button-style">
@@ -1416,6 +1425,63 @@ const Control = () => {
             onClick={handleModalCoupon}
           >
             +
+          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div style={{ fontSize: "22px", fontWeight: "550" }}>
+          Add Win Probability
+        </div>
+        <div className="d-flex justify-content-start my-4 align-items-center">
+          <div
+            className="d-flex flex-column align-items-start me-5 p-3"
+            style={{
+              boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.25)",
+              borderRadius: "15px",
+              width: "480px",
+            }}
+          >
+            <div>
+              <div
+                className="d-flex justify-content-between"
+                style={{
+                  fontSize: "19px",
+                  marginTop: "10px",
+                  marginBottom: "20px",
+                  fontWeight: "500",
+                  color: "#6A6A6A",
+                }}
+              >
+                <div>Spin Win Percentage</div>
+                <button
+                  style={{
+                    border: "none",
+                    background: "#FF9933",
+                    color: "white",
+                    borderRadius: "8px",
+                    height: "40px",
+                    width: "100px",
+                  }}
+                  disabled={loading}
+                  onClick={handleSave}
+                >
+                  {loading ? "Saving..." : "Save"}
+                </button>
+              </div>
+              <input
+                placeholder="Please enter 0-100"
+                type="number"
+                style={{
+                  marginRight: "10px",
+                  border: "none",
+                  borderBottom: "2px solid #AEB1D4",
+                  width: "400px",
+                }}
+                name="SpinWin"
+                onChange={handleChangeControl}
+                value={controlData.SpinWin}
+              />
+            </div>
           </div>
         </div>
       </div>
