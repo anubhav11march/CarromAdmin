@@ -6,7 +6,7 @@ const url = "https://carom.onrender.com/admin";
 const token = Cookies.get("token");
 
 const API = axios.create({
-  baseURL: "https://carom.onrender.com",
+  baseURL: "https://wingo.kyloapps.com/",
 });
 
 API.interceptors.request.use((req) => {
