@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const url = "https://carom.onrender.com/admin";
+const url = "https://wingo.kyloapps.com/admin";
 
 const token = Cookies.get("token");
 
