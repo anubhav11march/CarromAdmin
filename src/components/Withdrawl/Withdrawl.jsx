@@ -3,30 +3,70 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineNavigateBefore, MdOutlineNavigateNext } from "react-icons/md";
 import { getCurrentDate, getISODate } from "../../util";
 import { GetWithdrawal, ManageWithdrawal } from "../../api";
+import { Button } from "react-bootstrap";
 
 const Transaction = () => {
   const [date, setDate] = React.useState(getCurrentDate("-"));
   const [check, setCheck] = React.useState(false);
+  const [check2, setCheck2] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [set, SetSet] = React.useState(0);
   const [limit, setLimit] = React.useState(10);
   const [received, setReceived] = React.useState(false);
   const [data, setData] = React.useState({ totalPages: 0, details: [] });
+  const [searchValue, setSearchValue] = React.useState('');
+
 
   React.useEffect(() => {
     const fetchData = async () => {
+      let responseData;
       if (check) {
         const data = await GetWithdrawal(getISODate(date), page, limit);
         if (data.success && data.message === "Fetched Successfuly!") {
-          setData(data.data);
-          setReceived(true);
+          responseData = data.data
+          
         }
-      } else {
+      } 
+      else if(searchValue)
+      {
+        let temp
+        const data = await GetWithdrawal(null, null, null);
+        if (data.success && data.message === "Fetched Successfuly!") {
+          temp = data.data
+          console.log(temp)
+          
+        }
+        let temp2 = temp?.details.filter(item =>
+          item.number.includes(searchValue)
+        );
+        
+       responseData = {totalPages: temp.totalPages,
+        details: temp2
+      }
+      console.log(responseData)
+      console.log(temp2)
+       }
+      else {
         const data = await GetWithdrawal(null, page, limit);
         if (data.success && data.message === "Fetched Successfuly!") {
-          setData(data.data);
-          setReceived(true);
+          responseData = data.data
+          
         }
+      }
+    
+      if (responseData && responseData.details && Array.isArray(responseData.details)) {
+        // Sort the 'details' array in descending order based on 'createdAt'
+        responseData.details.sort((a, b) => 
+        {
+          const dateA = new Date(a.createdAt);
+  const dateB = new Date(b.createdAt);
+
+  return dateB.getTime() - dateA.getTime();
+        });
+    
+        console.log(responseData)
+        setData(responseData);
+        setReceived(true);
       }
     };
     fetchData();
@@ -34,10 +74,14 @@ const Transaction = () => {
       setData({ totalPages: 0, details: [] });
       setReceived(false);
     };
-  }, [date, page, limit, check]);
+  }, [date, page, limit, check,check2,searchValue]);
 
   const handleChange = (e) => {
     setDate(e.target.value);
+  };
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+    setCheck2(true)
   };
 
   const handleCheck = (e) => {
@@ -107,7 +151,10 @@ const Transaction = () => {
               className="ps-3 input-no-border"
               style={{ border: "none", color: "#FF9933" }}
               placeholder="Search on Users"
+              value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
             />
+            
           </div>
           <div
             className="d-flex align-items-center"

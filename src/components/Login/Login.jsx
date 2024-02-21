@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginAdmin } from "../../api";
 import Cookies from "js-cookie";
@@ -7,6 +7,7 @@ import "./login.css";
 const Login = () => {
   const navigate = useNavigate();
   const [user, setUser] = React.useState({ email: "", password: "" });
+  const [error,setError] = useState(null);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -15,10 +16,12 @@ const Login = () => {
     if (data.success && data?.message === "Login Successfuly!") {
       Cookies.set("token", data.data.token);
       Cookies.set("user", JSON.stringify(data?.data.user));
+      setError(null)
       navigate("/dashboard");
       window.location.reload();
     } else {
-      window.alert(data.error);
+      setError(data.error)
+
     }
   };
 
@@ -110,6 +113,21 @@ const Login = () => {
                 >
                   Forget Password?
                 </span>
+              </div>
+              <div>
+                {
+                  (
+                    error && (
+                      <div>
+                        <p style={
+      {
+        color:"red"
+      }
+                        }>{error}</p>
+                      </div>
+                    )
+                  )
+                }
               </div>
             </div>
             <button
